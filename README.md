@@ -7,7 +7,7 @@ This article is organized in the following way. [Diversity Subsampling](#diversi
 
 # Diversity Subsampling 
 
-In this section, we show how to use **FADS** to select a diverse subsample from a data set in Python 3. We will select a diverse subsample from the MGM data set with size <img src="https://latex.codecogs.com/svg.image?%5Cbg_white%20nmax&space;=&space;2000" title="https://latex.codecogs.com/svg.image?nmax = 2000" /> nmax = 2000 under the default parameter settings. There are four additional hyper-parameters for the ’DS’ function:
+In this section, we show how to use **FADS** to select a diverse subsample from a data set in Python 3. We will select a diverse subsample from the MGM data set with size <img src="http://www.sciweavers.org/tex2img.php?eq=nmax%20%3D%202000&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt="nmax = 2000" width="117" height="15" /> nmax = 2000 under the default parameter settings. There are four additional hyper-parameters for the ’DS’ function:
 
 <img src="http://www.sciweavers.org/tex2img.php?eq=%5Cbegin%7Bpmatrix%7D%0Ao%20%26%201%5C%5C%0A1%20%26%200%0A%5Cend%7Bpmatrix%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt="\begin{pmatrix}o & 1\\1 & 0\end{pmatrix}" width="58" height="39" />
 
