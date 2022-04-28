@@ -45,7 +45,7 @@ The returned Numpy array ds_idx contains the selected indices of each subsample 
 
 n = 20            |  n = 150 |n = 450
 :-------------------------:|:-------------------------:|:-------------------------
-![alt text](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/sea-subsample/2D_gmm_n_50_DS_norep_subsample.pdf)  |  ![alt text](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/sea-subsample/2D_gmm_n_150_DS_norep_subsample.pdf) | ![alt text](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/sea-subsample/2D_gmm_n_450_DS_norep_subsample.pdf)
+  ![alt text](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/sea-subsample/2D_gmm_n_150_DS_norep_subsample.jpg?raw=true) |  ![alt text](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/sea-subsample/2D_gmm_n_150_DS_norep_subsample.jpg?raw=true) | ![alt text](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/sea-subsample/2D_gmm_n_450_DS_norep_subsample.jpg?raw=true)
 
 # Custom Subsampling
 
