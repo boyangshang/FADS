@@ -43,9 +43,9 @@ ds_sample = data[ds_idx,:]
 
 The returned Numpy array ds_idx contains the selected indices of each subsample point; the selected DS subsample is fully-sequential. We can plot the subsamples at various sizes as follows. In the below plot, n denotes the subsample size and the subsample is fully-sequential. 
 
-n = 20            |  n = 150 |n = 450
-:-------------------------:|:-------------------------:|:-------------------------
-  ![alt text](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/sea-subsample/2D_gmm_n_150_DS_norep_subsample.jpg?raw=true) |  ![alt text](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/sea-subsample/2D_gmm_n_150_DS_norep_subsample.jpg?raw=true) | ![alt text](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/sea-subsample/2D_gmm_n_450_DS_norep_subsample.jpg?raw=true)
+
+
+<img src="https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg" alt="DS subsample" width="800"/>
 
 # Custom Subsampling
 
