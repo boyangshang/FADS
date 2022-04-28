@@ -11,6 +11,8 @@ In this section, we show how to use **FADS** to select a diverse subsample from 
 
 <img src="http://www.sciweavers.org/tex2img.php?eq=%5Cbegin%7Bpmatrix%7D%0Ao%20%26%201%5C%5C%0A1%20%26%200%0A%5Cend%7Bpmatrix%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt="\begin{pmatrix}o & 1\\1 & 0\end{pmatrix}" width="58" height="39" />
 
+<img src="https://latex.codecogs.com/svg.image?\bg{white}\begin{pmatrix}o&space;&&space;1\\1&space;&&space;0\end{pmatrix}" title="https://latex.codecogs.com/svg.image?\bg{white}\begin{pmatrix}o & 1\\1 & 0\end{pmatrix}" />
+
 # Custom Subsampling
 
 # Hyper-Parameter Tuning
