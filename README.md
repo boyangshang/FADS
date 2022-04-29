@@ -44,10 +44,32 @@ ds_sample = data[ds_idx,:]
 The returned Numpy array ds_idx contains the selected indices of each subsample point; the selected DS subsample is fully-sequential. We can plot the subsamples at various sizes as follows. In the below plot, n denotes the subsample size and the subsample is fully-sequential. 
 
 
+<img src="https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg" alt="DS subsample" width="850"/>
 
-<img src="https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg" alt="DS subsample" width="800"/>
+The following code shows how to use **FADS** to select a diverse subsample with replacement.
+```python
+#we will suppress warnings given by the sklearn GMM module due to convergence issues
+import warnings
+import ds_fns as df
+
+#subsample size
+nmax = 2000
+
+#perform diversity subsampling
+fastds = df.FADS(data)
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    
+    ds_idx = fastds.DS_WR(nmax)
+    
+#coordinates of the selected subsample
+sample = data[ds_idx,:]
+```
+
 
 # Custom Subsampling
+
+<img src="https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg" alt="CS subsample" height="650"/>
 
 # Hyper-Parameter Tuning
 
