@@ -14,6 +14,7 @@ pip install FADS
 
 # Diversity Subsampling 
 
+## Diversity Subsampling Without Replacement
 In this section, we show how to use **FADS** to select a diverse subsample from a data set in Python 3. We will select a diverse subsample with size 2000 from the MGM data set under the default parameter settings. There are four additional hyper-parameters for the ’DS’ function: 
 - n_components: the number of components to use for estimating the density of the data using a Gaussian Mixture Model (GMM)
 - init_params: method to initialize the component probabilities for GMM. It must be either ’kmeans’ or ’random’
@@ -46,6 +47,10 @@ The returned Numpy array ds_idx contains the selected indices of each subsample 
 
 <img src="https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg" alt="DS subsample" width="850"/>
 
+## Diversity Subsampling With Replacement
+The function in **FADS** that selects a diverse subsample from a data set with replacement is the 'DS_WR' function. There are three additional hyper-parameters for the ’DS_WR’ function: n_components, init_params and max_iter, the definitions of which are the same as in [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement).
+
+
 The following code shows how to use **FADS** to select a diverse subsample with replacement.
 ```python
 #we will suppress warnings given by the sklearn GMM module due to convergence issues
@@ -68,6 +73,15 @@ sample = data[ds_idx,:]
 
 
 # Custom Subsampling
+
+The DS_g function in **FADS** selects a custom subsample from a data set having some desired property other than/along with
+the diversity property. Compared with the DS function, the DS_g function has two additional parameters: target_pdf_list and
+reg_param. The user is expected to use a Numpy array as target_pdf_list to specify the desired subsampling ratios.
+
+- target_pdf_list: the desired subsampling ratios of each data point in the data set. It should be a numpy array of size N, where N is the data set size. 
+- reg_param: a number in interval [0, 100]. It controls how diverse the selected custom subsample is. By design, the larger reg_param is, the more diverse the custom subsample will be; and vice versa. The DS_g function uses reg_param in the following way. For convenience, let reg_param = &alpha;. Suppose the desired subsampling ratio of each point in the data set D = {x<sub>1</sub>, &hellip;, x<sub>N</sub>} is {u(x<sub>1</sub>), &hellip;, u(x<sub>N</sub>)}. In the DS_g function, the subsampling ratio of each point is set as g(x<sub>i</sub>) = u(x<sub>i</sub>) + u<sub>&alpha;</sub>, where u<sub>&alpha;</sub> is the lower &alpha;&percnt; quantile of set {u(x<sub>1</sub>), &hellip;, u(x<sub>N</sub>)}, for i = 1, &hellip; ,N.
+
+
 
 <img src="https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg" alt="CS subsample" height="650"/>
 
