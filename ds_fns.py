@@ -72,7 +72,7 @@ class FADS:
             #methods to initialize component ratios for GMM, there are only two choices so the users do not have to specify this one
             if not set(init_list).issubset(['kmeans','random']):
                 raise ValueError("Each element in init_list must be either 'kmeans' or 'random'.")     
-            param_choices['init_params'] = init_list
+            param_choices['init_params'] = sorted(init_list)
             
             
             #CV
