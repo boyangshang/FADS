@@ -120,16 +120,16 @@ Hyper-parameters for methods in the **FADS** package are related to the process 
 
 
 ## Outputs 
-None
+There is not output for the tune_params_cv function.
 
 
 The tune_params_cv function follows the following algorithm to tune the hyper-parameters. Suppose that there are t = 1, &hellip; T different hyper-parameter settings to choose from.
 - Randomly choose a subset of the entire data set with size &LeftFloor;fraction*N&RightFloor;;
 - Do a k-fold CV (k = 3 by default and can be specified by the user) and compute the testing log-likelihood L<sub>t</sub> for t = 1, &hellip; T, using the data subset selected in the above step;
 - Find the highest testing log-likelihood, say L<sub>max</sub>;
-- Compute the computational-cost score of each hyper-parameter setting. For convenience, let iter<sub>max</sub> = max(max_iter_list) and let ncomp<sub>max</sub>  = max(ncomponent_list). For each hyper-parameter setting t, its computational-cost score is defined as C<sub>t</sub> = ncomponent<sub>t</sub>/ncomp<sub>max</sub> + max_iter <sub>t</sub>/iter<sub>max</sub>, t = 1, &hellip; T. Here ncomponent<sub>t</sub> and max_iter <sub>t</sub> are the ncomponent and max_iter values used for hyper-parameter setting t. 
+- Compute the computational-cost score of each hyper-parameter setting. For convenience, let iter<sub>max</sub> = max(max_iter_list) and let ncomp<sub>max</sub>  = max(ncomponent_list). For each hyper-parameter setting t, its computational-cost score is defined as C<sub>t</sub> = ncomponent<sub>t</sub>/ncomp<sub>max</sub> + max_iter <sub>t</sub>/iter<sub>max</sub>, t = 1, &hellip; T. Here ncomponent<sub>t</sub> and max_iter <sub>t</sub> are the ncomponent and max_iter values used for hyper-parameter setting t;
 - Sort {C<sub>1</sub>, &hellip;, C<sub>T</sub>} is non-desending order and store the corresponding indices as j<sub>1</sub>, &hellip;, j<sub>T</sub>, such that C<sub>j<sub>m</sub></sub> <= C<sub>j<sub>n</sub></sub>, as long as 1 &le; m &le; n &le; T;
-- Find the smallest t such that |L<sub>max</sub>-L<sub>j<sub>t</sub></sub>|/L<sub>max</sub> < 1&percnt;,  t = 1, &hellip; T; denote it as t<sub>best</sub>
+- Find the smallest t such that |L<sub>max</sub>-L<sub>j<sub>t</sub></sub>|/L<sub>max</sub> < 1&percnt;,  t = 1, &hellip; T; denote it as t<sub>best</sub>;
 - The hyper-parameter setting with index j<sub>t<sub>best</sub></sub> will be chosen as the best one.
 
 By [[1]](#1), setting ncomponent = 32, max_iter = 10, update_iter = 1, and init_params = ’kmeans’ works well for all tested examples with various data distributions in 2D and 10D in their experiments, including product forms of standard normal, exponential, gamma, geometric distributions, and a mixture of multivariate Gaussian distributions. So we use this setting as the default hyper-parameter setting for the **FADS** package. 
