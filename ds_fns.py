@@ -88,15 +88,7 @@ class FADS:
             #idx_choice = np.array(range(nchoices))[(clf.best_score_-clf.cv_results_['mean_test_score'])/np.abs(clf.best_score_) < 10**(-2)][0]
             potential_idx = (clf.best_score_-clf.cv_results_['mean_test_score'])/np.abs(clf.best_score_) < 10**(-2)
             potential_idx = np.arange(nchoices)[potential_idx]
-
-            mylist = []
-            miter = max(max_iter_list)
-            mcomp = max(ncomponent_list)
-            for i in range(nchoices):   
-                temp = clf.cv_results_['params'][i]['max_iter']/miter +clf.cv_results_['params'][i]['n_components']/mcomp
-                mylist.append(temp)
-
-            idx_choice = np.argmin(np.array(mylist)[potential_idx])
+            idx_choice = np.argmin(clf.cv_results_['mean_fit_time'][potential_idx])
             idx_choice = potential_idx[idx_choice]
             
             self.best_params = clf.cv_results_['params'][idx_choice]
