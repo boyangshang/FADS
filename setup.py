@@ -13,7 +13,7 @@ setup(
     version="1.0.0",
     description="Fast Diversity Subsampling from a Data Set",
     long_description=README,
-    long_description_content_type="text/markdown",
+    long_description_content_type=text/markdown,
     url="https://github.com/boyangshang/FADS",
     author="Boyang Shang",
     author_email="boyangshang2015@u.northwestern.edu",
