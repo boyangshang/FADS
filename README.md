@@ -110,7 +110,7 @@ mysubsample = data[ds_g_idx,:]
 # Hyper-Parameter Tuning
 Hyper-parameters for methods in the **FADS** package are related to the process of estimating the probability density function evaluated at every point in the data set using GMM. The GMM density estimation procedure in **FADS** uses the ’GaussianMixture’ model in Scikit-learn ([[2]](#2)). The function for hyper-parameter tuning in **FADS** is tune_param_cv and below list its inputs and outputs. 
 
-*
+<em>
 ## Inputs
 - ncomponent_list: a python list of possible choices of 'ncomponents'; see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement) for the definition of 'ncomponents'. Default value is [2,10,50].
 - max_iter_list: a python list of possible choices of 'max_iter'; see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement) for the definition of 'max_iter'. Default value is [10, 50,100].
@@ -121,7 +121,7 @@ Hyper-parameters for methods in the **FADS** package are related to the process 
 
 ## Outputs 
 There is not output for the tune_params_cv function.
-*
+</em>
 
 The tune_params_cv function follows the following algorithm to tune the hyper-parameters. Suppose that there are t = 1, &hellip; T different hyper-parameter settings to choose from.
 - Randomly choose a subset of the entire data set with size &LeftFloor;fraction*N&RightFloor;;
