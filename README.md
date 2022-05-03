@@ -1,10 +1,10 @@
 
-This mannual provides examples using the FAst Diversity Subsampling (**FADS**) package developed by [[1]](#1) to select diverse subsamples (**DS**) and custom subsamples (**CS**) from a data set in Python. As discussed in [[1]](#1), a diverse subsample is a subset of a data set that is spread out over the region occupied by the (usually unknown) data distribution. A custom subsample is selected using the user-defined target sampling ratios, with or without consideration of the diversity property.
+This mannual provides examples using the FAst Diversity Subsampling (**FADS**) package developed by [[1]](#1) to select diverse subsamples (**DS**) and custom subsamples (**CS**) from a data set in Python. As discussed in [[1]](#1), a diverse subsample is a subset of a data set that is spread out over the (usually unknown) support of the data distribution. A custom subsample is selected using the user-defined target sampling ratios, with or without consideration of the diversity property.
 
 
-This article is organized in the following way. [Installation](#installation) illustrates how to install this package. [Diversity Subsampling](#diversity-subsampling) shows how to use **FADS** to select a diverse subsample from a data set without or with replacement. [Custom Subsampling](#custom-subsampling) provides one example to use **FADS** to select a custom subsample. [Hyper-Parameter Tuning](#hyper-parameter-tuning) shows how to use the built-in function in **FADS** to further tune the hyper-parameters.
+This article is organized in the following way. [Installation](#installation) illustrates how to install this package. [Diversity Subsampling](#diversity-subsampling) shows how to use **FADS** to select a diverse subsample from a data set without or with replacement. [Custom Subsampling](#custom-subsampling) provides one example to use **FADS** to select a custom subsample following a known target probability distribution (note that the target subsampling ratios do not have to be probability density function values). [Hyper-Parameter Tuning](#hyper-parameter-tuning) shows how to use the built-in function in **FADS** to further tune the hyper-parameters.
 
-The experimental setting for this article is as follows. For easy visualization, throughout this article, we use a synthetic Multivariate Gaussian Mixture (MGM) data in 2D. Details about generating this data set are provided in [Appendix A](#appendix-A:-synthetic-data-used-in-this-article). The default hyper-parameter setting will be used for all examples in this article unless otherwise specified.
+The experimental setting for this article is as follows. For easy visualization, throughout this article, we use a synthetic Multivariate Gaussian Mixture (MGM) data in 2D. Details about generating this data set are provided in [Appendix A](#appendix-a). The default hyper-parameter setting will be used for all examples in this article unless otherwise specified.
 
 # Installation 
 The **FADS** package is available on pip and can be installed using the following cammand:
@@ -17,17 +17,22 @@ pip install FADS
 
 [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement), [Diversity Subsampling With Replacement](#diversity-subsampling-with-replacement)  show how to select a diverse subsample from a data set without and with replacement respectively. 
 
-## Diversity Subsampling Without Replacement
-In this section, we show how to use DS function in **FADS** to select a diverse subsample from a data set in Python 3. One wants to first initialize the python class FADS as follows. Here the only input is a numpy array with N rows and q columns, where N is the data set size and q is the dimension of the data space.
+For all methods in **FADS**, one wants to first initialize the python class FADS. The inputs needed to initialize the FADS class in **FADS** are as follows.
+
+***Inputs:***
+- data: a numpy array with N rows and q columns, where N is the data set size and q is the dimension of the data space.
+- tune_params: a boolean variable indicating whether or not one plans to use the builtin function in **FADS** to tune the hyper-parameters (see [Hyper-Parameter Tuning](#hyper-parameter-tuning) for details). Default value is False.
+
+Below shows the python code to initialize the FADS class using the default hyper-parameter setting. 
 
 ```python
-#we will suppress warnings given by the sklearn GMM module due to convergence issues
 import ds_fns as df
 
 fastds = df.FADS(data)
 ```
 
-Then, one can use the DS function to select a diverse subsample from the data set without replacement. The inputs and outputs of the DS function are listed below. 
+## Diversity Subsampling Without Replacement
+The DS function in **FADS** selects a diverse subsample from a data set without replacement. The inputs and outputs of the DS function are listed below. 
 
 ***Inputs:***
 - n: an integer denoting the size of the subsample to be selected. No default value is provided for this variable. 
@@ -40,7 +45,7 @@ Then, one can use the DS function to select a diverse subsample from the data se
 - sample_idx: a numpy array of size n with data type np.int64. The i-th element of sample_idx denotes the index of the i-th selected subsample point.
 
 
-As an example, here we select a diverse subsample with size 2000 from the MGM data set under the default hyper-parameter setting. One can also use the built-in function in **FADS** to tune the hyper-parameters (see [Hyper-Parameter Tuning](#hyper-parameter-tuning) for details). The python code to select a diverse subsample from a data set without replacement using the 'DS' function is shown below.
+As an example, here we select a diverse subsample with size 2000 from the MGM data set under the default hyper-parameter setting. One can also use the built-in function in **FADS** to tune the hyper-parameters (see [Hyper-Parameter Tuning](#hyper-parameter-tuning) for details). The python code to select a diverse subsample from a data set without replacement using the DS function is shown below.
 
 ```python
 #we will suppress warnings given by the sklearn GMM module due to convergence issues
@@ -98,7 +103,7 @@ The DS_g function in **FADS** selects a custom subsample without replacement fro
 - target_pdf_list: a numpy array of size N denoting the desired subsampling ratio of each data point in the data set. Here N is the data set size. Default value is a numpy array of all ones with size N.
 - reg_param: a number in interval [0, 100]. It controls how diverse the selected custom subsample is. By design, the larger reg_param is, the more diverse the custom subsample will be; and vice versa. The DS_g function uses reg_param in the following way. For convenience, let reg_param = &alpha;. Suppose the desired subsampling ratio of each point in the data set D = {x<sub>1</sub>, &hellip;, x<sub>N</sub>} is {u(x<sub>1</sub>), &hellip;, u(x<sub>N</sub>)}. In the DS_g function, the subsampling ratio of each point is set as g(x<sub>i</sub>) = u(x<sub>i</sub>) + u<sub>&alpha;</sub>, where u<sub>&alpha;</sub> is the lower &alpha;&percnt; quantile of set {u(x<sub>1</sub>), &hellip;, u(x<sub>N</sub>)}, for i = 1, &hellip; ,N. Default value is 0.
 
-Now we provide an example using the DS_g function in **FADS** to select a custom subsample without replacement from the 2D MGM data set. The target subsampling ratio at each point is computed as the probability density value of the multivariate normal distribution with mean (-2.5, 2.5)<sup>T</sup> and a covariance matrix equaling the identity matrix in the Euclidean space of dimension 2. The code is as follows. As before, we use the default hyper-parameter setting here. [Hyper-Parameter Tuning](#hyper-parameter-tuning) discusses how to tune these hyper-parameters for a specific data set. The following figure shows the selected custom subsamples with varying reg_param values at subsample size n = 200. The red open circles indicate selected subsample points; the small gray dots represent a random subset with a size 2000 of the data.
+Now we provide an example using the DS_g function in **FADS** to select a custom subsample without replacement from the 2D MGM data set. The target subsampling ratio at each point is computed as the probability density value of the multivariate normal distribution with mean (-2.5, 2.5)<sup>T</sup> and a covariance matrix equaling the identity matrix in the Euclidean space of dimension 2. The code is as follows. As before, we use the default hyper-parameter setting here. [Hyper-Parameter Tuning](#hyper-parameter-tuning) discusses how to tune these hyper-parameters for a specific data set. 
 
 ```python
 import warnings
@@ -119,7 +124,7 @@ with warnings.catch_warnings():
 #coordinates of selected subsample
 mysubsample = data[ds_g_idx,:]
 ```
-
+The following figure shows the selected custom subsamples with varying reg_param values at subsample size n = 200. The red open circles indicate selected subsample points; the small gray dots represent a random subset with size 2000 of the data.
 
 <img src="https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg" alt="CS subsample" height="650"/>
 
@@ -132,24 +137,25 @@ Hyper-parameters for methods in the **FADS** package are related to the process 
 - max_iter_list: a python list of possible choices of 'max_iter'; see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement) for the definition of 'max_iter'. Default value is [10, 50,100].
 - nfold: integer; how many folds to use for the Cross-Validation(CV) procedure. Default value is 3.
 - init_list: a python list of possible choices of 'init_params'; see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement) for the definition of 'init_params'. Default value is ['kmeans', 'random'].
-- fraction: a float ranging from 0 to 1; a random subset of size &LeftFloor;fraction*N&RightFloor; will be selected from the data for the CV procedure. Here N denotes the data set size and &LeftFloor;fraction*N&RightFloor; denotes the largest integer not larger than N/2. Default value is 1.0.
+- fraction: a float ranging from 0 to 1; a random subset of size &LeftFloor;fraction&times;N&RightFloor; will be selected from the data for the CV procedure. Here N denotes the data set size and &LeftFloor;fraction&times;N&RightFloor; denotes the largest integer not larger than fraction&times;N. Default value is 1.0.
 
 
 ***Outputs:*** 
+
 There is not output for the tune_params_cv function; the selected best hyper-parameter setting will be stored internally in the FADS class. 
 
 
 The tune_params_cv function follows the following algorithm to tune the hyper-parameters. Suppose that there are t = 1, &hellip; T different hyper-parameter settings to choose from.
-- Randomly choose a subset of the entire data set with size &LeftFloor;fraction*N&RightFloor;;
+- Randomly choose a subset of the entire data set with size &LeftFloor;fraction&times;N&RightFloor;;
 - Do a k-fold CV (k = nfold) and compute the testing log-likelihood L<sub>t</sub> for t = 1, &hellip; T, using the data subset selected in the above step. At the same time, for each hyper-parameter setting indexed by t = 1, &hellip; T, record the average fitting time over all folds as the computational-cost score C<sub>t</sub>;
 - Find the highest testing log-likelihood, say L<sub>max</sub>;
 - Sort {C<sub>1</sub>, &hellip;, C<sub>T</sub>} is non-desending order and store the corresponding indices as j<sub>1</sub>, &hellip;, j<sub>T</sub>, such that C<sub>j<sub>m</sub></sub> <= C<sub>j<sub>n</sub></sub>, as long as 1 &le; m &le; n &le; T;
 - Find the smallest t such that |L<sub>max</sub>-L<sub>j<sub>t</sub></sub>|/L<sub>max</sub> < 1&percnt;,  t = 1, &hellip; T; denote it as t<sub>best</sub>;
 - The hyper-parameter setting with index j<sub>t<sub>best</sub></sub> will be chosen as the best one.
 
-By [[1]](#1), setting ncomponent = 32, max_iter = 10, update_iter = 1, and init_params = ’kmeans’ works well for all tested examples with various data distributions in 2D and 10D in their experiments, including product forms of standard normal, exponential, gamma, geometric distributions, and a mixture of multivariate Gaussian distributions. So we use this setting as the default hyper-parameter setting for the **FADS** package. 
-
 For the choice of ’update_iter’, larger values of ’update_iter’ usually lead to better accuracy in density updating, at the price of longer runtime. Since in the DS algorithm, previously obtained GMM parameters are used as initial guesses for the updating process, we suggest using a smaller value for update_iter than max_iter for better computational efficiency. The default setting is update_iter = 1. Note that ’update_iter’ will not be tuned by the tune_params_cv function and the user is expected to use the default setting or to specify it explicitly.
+
+By [[1]](#1), setting ncomponent = 32, max_iter = 10, update_iter = 1, and init_params = ’kmeans’ works well for all tested examples with various data distributions in 2D and 10D in their experiments, including product forms of standard normal, exponential, gamma, geometric distributions, and a mixture of multivariate Gaussian distributions. So we use this setting as the default hyper-parameter setting for all functions in the **FADS** package. 
 
 The code for hyper-paramter tuning using tune_params_cv is shown below. Here the possible choices of ’ncomponent’, ’max_iter’ and ’init_params’ are respectively {2, 15, 30}, {10, 100} and {’kmeans’}. We use a random subset of the data with size &LeftFloor;N/2&RightFloor; to perform this task.
 
@@ -194,7 +200,7 @@ Proceedings of the fifth Berkeley symposium on mathematical statistics and proba
 
 
 
-# Appendix A: Synthetic Data Used in this Article
+# Appendix A
 The synthetic data used to obtain results in this article can be generated using the following code.
 
 ```python
