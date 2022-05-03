@@ -66,13 +66,13 @@ class FADS:
             param_choices = {}
             #set paramter choices for CV for tunning
             #number of components GMM
-            param_choices['n_components'] = sorted(ncomponent_list)
+            param_choices['n_components'] = ncomponent_list
             #number of maximum number of iterms for GMM
-            param_choices['max_iter'] = sorted(max_iter_list)
+            param_choices['max_iter'] = max_iter_list
             #methods to initialize component ratios for GMM, there are only two choices so the users do not have to specify this one
             if not set(init_list).issubset(['kmeans','random']):
                 raise ValueError("Each element in init_list must be either 'kmeans' or 'random'.")     
-            param_choices['init_params'] = sorted(init_list)
+            param_choices['init_params'] = init_list
             
             
             #CV
@@ -85,7 +85,20 @@ class FADS:
                 
             #choose the best paramters using CV results
             nchoices = len(clf.cv_results_['mean_test_score'])
-            idx_choice = np.array(range(nchoices))[(clf.best_score_-clf.cv_results_['mean_test_score'])/np.abs(clf.best_score_) < 10**(-2)][0]
+            #idx_choice = np.array(range(nchoices))[(clf.best_score_-clf.cv_results_['mean_test_score'])/np.abs(clf.best_score_) < 10**(-2)][0]
+            potential_idx = (clf.best_score_-clf.cv_results_['mean_test_score'])/np.abs(clf.best_score_) < 10**(-2)
+            potential_idx = np.arange(nchoices)[potential_idx]
+
+            mylist = []
+            miter = max(max_iter_list)
+            mcomp = max(ncomponent_list)
+            for i in range(nchoices):   
+                temp = clf.cv_results_['params'][i]['max_iter']/miter +clf.cv_results_['params'][i]['n_components']/mcomp
+                mylist.append(temp)
+
+            idx_choice = np.argmin(np.array(mylist)[potential_idx])
+            idx_choice = potential_idx[idx_choice]
+            
             self.best_params = clf.cv_results_['params'][idx_choice]
             print(self.best_params)
         else:
