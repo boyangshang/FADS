@@ -108,24 +108,35 @@ mysubsample = data[ds_g_idx,:]
 <img src="https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg" alt="CS subsample" height="650"/>
 
 # Hyper-Parameter Tuning
-Hyper-parameters for methods in the **FADS** package are related to the process of estimating the probability density function evaluated at every point in the data set using GMM. Here we take DS as an example to discuss the hyper-parameter tuning process. The DS_g and DS_WR functions can be tuned in exactly the same way.
+Hyper-parameters for methods in the **FADS** package are related to the process of estimating the probability density function evaluated at every point in the data set using GMM. The GMM density estimation procedure in **FADS** uses the ’GaussianMixture’ model in Scikit-learn ([[2]](#2)). The function for hyper-parameter tuning in **FADS** is tune_param_cv and below list its inputs and outputs. 
 
-As mentioned in [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement), there are four hyper-parameters in the DS function: ’ncomponent’, ’max_iter’, ’update_iter’, and ’init_params’, and they all work for the density estimation part of the DS algorithm. The DS function in FADS uses the ’GaussianMixture’ model in Scikit-learn for the density estimation process ([[2]](#2)). The larger the values of ’ncomponent’, ’max_iter’ and ’update_iter’ are, the longer the runtime of the DS function will be.
 
-By [[1]](#1), setting ncomponent = 32, max_iter = 10, update_iter = 1, and init_params = ’kmeans’ works well for all tested examples with various data distributions in 2D and 10D in their experiments, including product forms of standard normal, exponential, gamma, geometric distributions, and a mixture of multivariate Gaussian distributions. So we use this setting as the default hyper-parameter setting for the **FADS** package. In situations where the above default setting may be less optimal, one can use the built-in function tune_params_cv in **FADS** to further tune these hyper-parameters.
+** Inputs
+- ncomponent_list: a python list of possible choices of 'ncomponents'; see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement) for the definition of 'ncomponents'. Default value is [2,10,50].
+- max_iter_list: a python list of possible choices of 'max_iter'; see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement) for the definition of 'max_iter'. Default value is [10, 50,100].
+- nfold: integer; how many folds to use for the Cross-Validation(CV) procedure. Default value is 3.
+- init_list: a python list of possible choices of 'init_params'; see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement) for the definition of 'init_params'. Default value is ['kmeans', 'random'].
+- fraction: a float ranging from 0 to 1; a random subset of size &LeftFloor;fraction*N&RightFloor; will be selected from the data for the CV procedure. Here N denotes the data set size and &LeftFloor;fraction*N&RightFloor; denotes the largest integer not larger than N/2. Default value is 1.0.
 
-The built-in tune_params_cv function follows the following algorithm to tune the hyper-parameters. Suppose that there are k = 1, &hellip; K different hyper-parameter settings to choose from.
-- Do a k-fold CV (k = 3 by default and can be specified by the user) and compute the testing log-likelihood of the data for each hyper-parameter setting;
-- Find the highest tesitng log-likelihood of the data , say L<sub>max</sub>;
-- Record all hyper-parameter settings such that |L<sub>max</sub>-L<sub>k</sub>|/L<sub>max</sub> < 1&percnt;,  k = 1, &hellip; K;
-- Sort the hyper-parameter settings recorded in the last step in the following way: 
 
-In terms of methodology, the built-in tune_params_cv function does a k-fold CV (k = 3 by default and can be specified by
-the user) to find the best setting for ’ncomponent’, ’max_iter’, and ’init_params’ that results in the maximum testing log-likelihood of the entire data, balancing the estimation accuracy and computational costs. Precisely, the tune_params_cv function recognizes the setting yielding a loglikelihood of the data whose relative absolute difference with the highest log-likelihood is under 1&percnt; as an acceptable choice. Among all acceptable choices, tune_params_cv chooses the one with the smallest parameters values, with a descending order of priorities given to ’ncomponent’ and ’max_iter’. In the case when one prefers to use a random subset of the data to tune the hyper-parameters, one can control the size of the random subset using the parameter ’fraction’. The value of ’fraction’ should be between 0 and 1; the larger this value is, the longer runtime the function will need to tune the hyper-parameters. For example, when fraction = 0.5, tune_params_cv randomly selects half of the data to use for tuning the hyper-parameters.
+** Outputs 
+None
+
+
+The tune_params_cv function follows the following algorithm to tune the hyper-parameters. Suppose that there are t = 1, &hellip; T different hyper-parameter settings to choose from.
+- Randomly choose a subset of the entire data set with size &LeftFloor;fraction*N&RightFloor;;
+- Do a k-fold CV (k = 3 by default and can be specified by the user) and compute the testing log-likelihood L<sub>t</sub> for t = 1, &hellip; T, using the data subset selected in the above step;
+- Find the highest tesitng log-likelihood, say L<sub>max</sub>;
+- Compute the computational-cost score of each hyper-parameter setting. For convenience, let iter<sub>max</sub> = max(max_iter_list) and let ncomp<sub>max</sub>  = max(ncomponent_list). For each hyper-parameter setting t, its computational-cost score is defined as C<sub>t</sub> = ncomponent<sub>t</sub>/ncomp<sub>max</sub> + max_iter <sub>t</sub>/max(max_iter_list), t = 1, &hellip; T. Here ncomponent<sub>t</sub> and max_iter <sub>t</sub> are the ncomponent and max_iter values used for hyper-parameter setting t. 
+- Sort {C<sub>1</sub>, &hellip;, C<sub>T</sub>} is non-desending order and store the corresponding indices as j<sub>1</sub>, &hellip;, j<sub>T</sub>, such that C<sub>j<sub>m</sub></sub> <= C<sub>j<sub>n</sub></sub>, as long as 1 &le; m &le; n &le; T;
+- Find the smallest t such that |L<sub>max</sub>-L<sub><sub>j<sub>t</sub></sub></sub>|/L<sub>max</sub> < 1&percnt;,  t = 1, &hellip; T; denote it as t<sub>best</sub>
+- The hyper-parameter setting with index j<sub>t<sub>best</sub></sub> will be chosen as the best one.
+
+By [[1]](#1), setting ncomponent = 32, max_iter = 10, update_iter = 1, and init_params = ’kmeans’ works well for all tested examples with various data distributions in 2D and 10D in their experiments, including product forms of standard normal, exponential, gamma, geometric distributions, and a mixture of multivariate Gaussian distributions. So we use this setting as the default hyper-parameter setting for the **FADS** package. 
 
 For the choice of ’update_iter’, larger values of ’update_iter’ usually lead to better accuracy in density updating, at the price of longer runtime. Since in the DS algorithm, previously obtained GMM parameters are used as initial guesses for the updating process, we suggest using a smaller value for update_iter than max_iter for better computational efficiency. The default setting is update_iter = 1. Note that ’update_iter’ will not be tuned by the tune_params_cv function and the user is expected to use the default setting or to specify it explicitly.
 
-The code for hyper-paramter tuning using tune_params_cv is below. Here the possible choices of ’ncomponent’, ’max_iter’ and ’init_params’ are respectively {2, 10, 50}, {10, 50, 100} and {’kmeans’, ’random’}. We use a random subset of the data with size N/2 (precisely, the largest integer not larger than N/2) to perform this task.
+The code for hyper-paramter tuning using tune_params_cv is shown below. Here the possible choices of ’ncomponent’, ’max_iter’ and ’init_params’ are respectively {2, 15, 30}, {10, 100} and {’kmeans’}. We use a random subset of the data with size &LeftFloor;N/2&RightFloor; to perform this task.
 
 ```python
 import ds_fns as df
@@ -133,9 +144,9 @@ import ds_fns as df
 fastds = df.FADS(data, tune_params = True)
 #user-specified parameter choices
 nfold = 3
-ncomponents = [2,10,50]
-max_iters = [10,50,100]
-inits = ['kmeans','random']
+ncomponents = [2,15,30]
+max_iters = [10,100]
+inits = ['kmeans']
 fraction = 0.5
 
 #tune hyper-parameters
