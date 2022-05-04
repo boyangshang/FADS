@@ -68,7 +68,7 @@ ds_sample = data[ds_idx,:]
 The selected DS subsample is fully-sequential. We can plot the subsamples at various sizes as follows. In the below plot, n denotes the subsample size. The red open circles indicate selected subsample points and the gray dots represent a size-2000 random subset of the data.
 
 
-![](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg?raw=true)
+![](https://github.com/boyangshang/FADS/raw/main/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg)
 
 
 
@@ -131,7 +131,8 @@ The following figure shows the selected custom subsamples with varying reg_param
 
 
 
-![](https://github.com/boyangshang/FADS/blob/main/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg?raw=true)
+![](https://github.com/boyangshang/FADS/raw/main/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg)
+
 
 # Hyper-Parameter Tuning
 Hyper-parameters for methods in the **FADS** package are related to the process of estimating the probability density function evaluated at every point in the data set using GMM. The GMM density estimation procedure in **FADS** uses the ’GaussianMixture’ model in Scikit-learn ([[2]](#2)). The function for hyper-parameter tuning in **FADS** is tune_param_cv and below list its inputs and outputs. 
