@@ -68,7 +68,7 @@ ds_sample = data[ds_idx,:]
 The selected DS subsample is fully-sequential. We can plot the subsamples at various sizes as follows. In the below plot, n denotes the subsample size. The red open circles indicate selected subsample points and the gray dots represent a size-2000 random subset of the data.
 
 
-<img src="https://github.com/boyangshang/FADS/blob/1426ec48f3546aa8a07ef54bc975b1410ac99665/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg" alt="DS subsample" width="850"/>
+<img src="https://github.com/boyangshang/FADS/raw/1426ec48f3546aa8a07ef54bc975b1410ac99665/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg" alt="DS subsample" width="850"/>
 
 ## Diversity Subsampling With Replacement
 The DS_WR function in **FADS** selects a diverse subsample from a data set with replacement. The inputs and outputs of DS_WR are the same with the DS function (see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement)) except that update_iter is not one of its inputs.
@@ -126,7 +126,7 @@ mysubsample = data[ds_g_idx,:]
 ```
 The following figure shows the selected custom subsamples with varying reg_param values at subsample size n = 200. The red open circles indicate selected subsample points; the small gray dots represent a random subset with size 2000 of the data.
 
-<img src="https://github.com/boyangshang/FADS/blob/473c26f3fb0e85587ed804ae61856a869753af1a/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg" alt="CS subsample" height="650"/>
+<img src="https://github.com/boyangshang/FADS/raw/473c26f3fb0e85587ed804ae61856a869753af1a/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg" alt="CS subsample" height="650"/>
 
 # Hyper-Parameter Tuning
 Hyper-parameters for methods in the **FADS** package are related to the process of estimating the probability density function evaluated at every point in the data set using GMM. The GMM density estimation procedure in **FADS** uses the ’GaussianMixture’ model in Scikit-learn ([[2]](#2)). The function for hyper-parameter tuning in **FADS** is tune_param_cv and below list its inputs and outputs. 
