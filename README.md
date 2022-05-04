@@ -68,13 +68,14 @@ ds_sample = data[ds_idx,:]
 The selected DS subsample is fully-sequential. We can plot the subsamples at various sizes as follows. In the below plot, n denotes the subsample size. The red open circles indicate selected subsample points and the gray dots represent a size-2000 random subset of the data.
 
 
-![](https://github.com/boyangshang/FADS/raw/main/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg)
+![](https://github.com/boyangshang/FADS/raw/main/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg?v04-05-2022)
 
 
 
 
 ## Diversity Subsampling With Replacement
 The DS_WR function in **FADS** selects a diverse subsample from a data set with replacement. The inputs and outputs of DS_WR are the same with the DS function (see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement)) except that update_iter is not one of its inputs.
+
 
 
 The following code shows how to use the DS_WR function to select a diverse subsample from a data set with replacement.
@@ -131,7 +132,7 @@ The following figure shows the selected custom subsamples with varying reg_param
 
 
 
-![](https://github.com/boyangshang/FADS/raw/main/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg)
+![](https://github.com/boyangshang/FADS/raw/main/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg?v04-05-2022)
 
 
 # Hyper-Parameter Tuning
