@@ -67,7 +67,7 @@ ds_sample = data[ds_idx,:]
 
 The selected DS subsample is fully-sequential. We can plot the subsamples at various sizes as follows. In the below plot, n denotes the subsample size. The red open circles indicate selected subsample points and the gray dots represent a size-2000 random subset of the data.
 
-![](https://raw.githubusercontent.com/boyangshang/FADS/main/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg?token=GHSAT0AAAAAABTY7A42B2OWKHVRN6OFWOFKYTSCEHA)
+![](https://raw.githubusercontent.com/boyangshang/Files/main/Graphs4Readme/2D_gmm_DS_norep_subsample.jpg)
 
 
 ## Diversity Subsampling With Replacement
@@ -128,8 +128,7 @@ mysubsample = data[ds_g_idx,:]
 The following figure shows the selected custom subsamples with varying reg_param values at subsample size n = 200. The red open circles indicate selected subsample points; the small gray dots represent a random subset with size 2000 of the data.
 
 
-
-![](https://raw.githubusercontent.com/boyangshang/FADS/main/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg?token=GHSAT0AAAAAABTY7A42XQUDTM6XDSRTSPMKYTSCAMA)
+![](https://raw.githubusercontent.com/boyangshang/Files/main/Graphs4Readme/DSg_2D_gmm_DS_norep_subsample.jpg)
 
 
 # Hyper-Parameter Tuning
