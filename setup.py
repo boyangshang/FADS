@@ -10,12 +10,12 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="FADS",
-    version="1.0.2",
+    version="1.0.5",
     description="Fast Diversity Subsampling from a Data Set",
-    long_description_content_type="text/markdown",
     long_description=README,
+    long_description_content_type="text/markdown",
     url="https://github.com/boyangshang/FADS",
-    author="Boyang Shang",
+    author="Boyang Shang, Daniel Apley, Sanjay Mehrotra",
     author_email="boyangshang2015@u.northwestern.edu",
     license="MIT",
     classifiers=[
