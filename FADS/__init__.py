@@ -1,1 +1,1 @@
-from .ds_fns import FADS
+from .sampling_fns import FADS
