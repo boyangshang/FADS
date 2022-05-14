@@ -23,7 +23,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
-    packages=find_packages('FADS','FADS.*'),
+    packages=find_packages(include=['FADS', 'FADS.*']),
     include_package_data=True,
     install_requires=["numpy", "scikit-learn"],
 )
