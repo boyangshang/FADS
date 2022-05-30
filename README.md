@@ -110,9 +110,11 @@ Now we provide an example using the DS_g function in **FADS** to select a custom
 import warnings
 import FADS
 import scipy.stats as ss
-desired_ratios = ss.norm(-2.5, 1).pdf(data[:,0])*ss.norm(2.5, 1).pdf(data[:,1])
+desired_ratios = ss.norm(-2.5, 1).pdf(data[:,0]\
+                 )*ss.norm(2.5, 1).pdf(data[:,1])
 
-#subsampling using the DS_g function under the default hyper-paramter settings
+#subsampling using the DS_g function under the 
+#default hyper-paramter settings
 nmax = 2000
 reg_param = 50
 
@@ -120,7 +122,8 @@ reg_param = 50
 fastds = FADS.FADS(data)
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
-    ds_g_idx = fastds.DS_g(nmax, target_pdf_list = desired_ratios, reg_param = reg_param)
+    ds_g_idx = fastds.DS_g(nmax, target_pdf_list \
+               = desired_ratios, reg_param = reg_param)
     
 #coordinates of selected subsample
 mysubsample = data[ds_g_idx,:]
@@ -174,10 +177,12 @@ inits = ['kmeans']
 fraction = 0.5
 
 #tune hyper-parameters
-fastds.tune_params_CV(ncomponent_list = ncomponents, max_iter_list = max_iters,\
-    init_list = inits, nfold = nfold,fraction = fraction)
+fastds.tune_params_CV(ncomponent_list = ncomponents,\
+       max_iter_list = max_iters, init_list = inits,\
+       nfold = nfold,fraction = fraction)
 
-#e.g. use DS to select a diverse subsample with size 2000 using the tuned paramters
+#e.g. use DS to select a diverse subsample with size
+#     2000 using the tuned paramters
 n = 2000
 ds_idx = fastds.DS(n)
 ```
@@ -236,6 +241,8 @@ data = np.zeros(shape = (N,dimension))
 
 
 idx = np.random.choice([True,False],N,p=[0.5,0.5])
-data[idx,:] = np.random.multivariate_normal(mu1, Sigma1, size=np.sum(idx))
-data[~idx,:] = np.random.multivariate_normal(mu2, Sigma2, size=N-np.sum(idx))
+data[idx,:] = np.random.multivariate_normal(mu1, \
+                Sigma1, size=np.sum(idx))
+data[~idx,:] = np.random.multivariate_normal(mu2,\
+                Sigma2, size=N-np.sum(idx))
 ```
