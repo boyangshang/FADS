@@ -174,7 +174,8 @@ inits = ['kmeans']
 fraction = 0.5
 
 #tune hyper-parameters
-fastds.tune_params_CV(ncomponent_list = ncomponents, max_iter_list = max_iters, init_list = inits, nfold = nfold,fraction = fraction)
+fastds.tune_params_CV(ncomponent_list = ncomponents, max_iter_list = max_iters,\
+    init_list = inits, nfold = nfold,fraction = fraction)
 
 #e.g. use DS to select a diverse subsample with size 2000 using the tuned paramters
 n = 2000
