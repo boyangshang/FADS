@@ -26,9 +26,9 @@ For all methods in **FADS**, one wants to first initialize the python class FADS
 Below shows the python code to initialize the FADS class using the default hyper-parameter setting. 
 
 ```python
-import ds_fns as df
+import FADS
 
-fastds = df.FADS(data)
+fastds = FADS.FADS(data)
 ```
 
 ## Diversity Subsampling Without Replacement
@@ -50,13 +50,13 @@ As an example, here we select a diverse subsample with size 2000 from the MGM da
 ```python
 #we will suppress warnings given by the sklearn GMM module due to convergence issues
 import warnings
-import ds_fns as df
+import FADS
 
 #subsample size
 nmax = 2000
 
 #perform diversity subsampling
-fastds = df.FADS(data)
+fastds = FADS.FADS(data)
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     ds_idx = fastds.DS(nmax)
@@ -79,13 +79,13 @@ The following code shows how to use the DS_WR function to select a diverse subsa
 ```python
 #we will suppress warnings given by the sklearn GMM module due to convergence issues
 import warnings
-import ds_fns as df
+import FADS
 
 #subsample size
 nmax = 2000
 
 #perform diversity subsampling
-fastds = df.FADS(data)
+fastds = FADS.FADS(data)
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     
@@ -108,7 +108,7 @@ Now we provide an example using the DS_g function in **FADS** to select a custom
 
 ```python
 import warnings
-import ds_fns as df
+import FADS
 import scipy.stats as ss
 desired_ratios = ss.norm(-2.5, 1).pdf(data[:,0])*ss.norm(2.5, 1).pdf(data[:,1])
 
@@ -117,7 +117,7 @@ nmax = 2000
 reg_param = 50
 
 #custom subsampling
-fastds = df.FADS(data)
+fastds = FADS.FADS(data)
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     ds_g_idx = fastds.DS_g(nmax, target_pdf_list = desired_ratios, reg_param = reg_param)
@@ -163,9 +163,9 @@ By [[1]](#1), setting ncomponent = 32, max_iter = 10, update_iter = 1, and init_
 The code for hyper-paramter tuning using tune_params_cv is shown below. Here the possible choices of ’ncomponent’, ’max_iter’ and ’init_params’ are respectively {2, 15, 30}, {10, 100} and {’kmeans’}. We use a random subset of the data with size &LeftFloor;N/2&RightFloor; to perform this task.
 
 ```python
-import ds_fns as df
+import FADS
 
-fastds = df.FADS(data, tune_params = True)
+fastds = FADS.FADS(data, tune_params = True)
 #user-specified parameter choices
 nfold = 3
 ncomponents = [2,15,30]
