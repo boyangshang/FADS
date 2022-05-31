@@ -23,9 +23,8 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
-    packages=find_packages(include=['FADS', 'FADS.*']),
+    packages=find_packages(include=['FADS', 'FADS.*'],exclude=['tests']),
     include_package_data=True,
     install_requires=["numpy", "scikit-learn"],
-    setup_requires=['pytest-runner'],
     tests_require=['pytest','scipy'],
 )
