@@ -26,7 +26,5 @@ setup(
     packages=find_packages(include=['FADS', 'FADS.*'],exclude=['tests']),
     include_package_data=True,
     install_requires=["numpy", "scikit-learn"],
-    'extras_require': {
-    'testing': ['pytest', 'numpy'],
     tests_require=['scipy','pytest'],
 )
