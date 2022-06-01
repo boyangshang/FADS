@@ -10,7 +10,7 @@ import numpy as np
 import warnings
 import scipy.stats as ss
 
-def test_FADS_imported:
+def test_FADS_imported():
     """Test whehter the FADS package can be imported or not."""
     assert "FADS" in sys.modules
 
@@ -128,7 +128,9 @@ def test_tune_params(data4tests):
     fraction = 0.5
 
     #tune hyper-parameters
-    fastds.tune_params_CV(ncomponent_list = ncomponents,\
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        fastds.tune_params_CV(ncomponent_list = ncomponents,\
            max_iter_list = max_iters, init_list = inits,\
            nfold = nfold,fraction = fraction)
 
