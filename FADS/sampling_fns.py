@@ -11,14 +11,15 @@ import warnings
 class FADS:
     '''
     This class implements the Diversity Subsampling and Custom Subsampling methods
-    proposed in paper <>
+    proposed in paper <'Diversity Subsampling: Custom Subsamples from Large Data Sets' authored by Boyang
+    Shang, Daniel Apley and Sanjay Mehrotra>
     
     Authors:
     Boyang Shang <boyangshang2015@u.northwestern.edu>
     Daniel Apley <apley@northwestern.edu>
     Sanjay Mehrotra <mehrotra@northwestern.edu>
     
-    Last Updated on: May 03, 2022    
+    Last Updated on: Jun 02, 2022    
     
     '''
     
