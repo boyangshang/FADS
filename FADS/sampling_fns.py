@@ -40,6 +40,7 @@ class FADS:
         '''
         
         ##standardize the original data set to a unit hypercube
+        N = data.shape[0]
         Min_arr = np.percentile(data,0.5,axis =0)
         Max_arr = np.percentile(data,99.5,axis =0)
         
