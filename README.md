@@ -7,7 +7,7 @@ This article is organized in the following way. [Installation](#installation) il
 The experimental setting for this article is as follows. For easy visualization, throughout this article, we use a synthetic Multivariate Gaussian Mixture (MGM) data in 2D. Details about generating this data set are provided in [Appendix A](#appendix-a). The default hyper-parameter setting will be used for all examples in this article unless otherwise specified.
 
 # Installation 
-The **FADS** package is available on pip and can be installed using the following cammand:
+The **FADS** package is available on PyPI and can be installed using the following cammand:
 ```console
 pip install FADS
 ```
