@@ -17,7 +17,7 @@ pip install FADS
 
 [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement), [Diversity Subsampling With Replacement](#diversity-subsampling-with-replacement)  show how to select a diverse subsample from a data set without and with replacement respectively. 
 
-For all methods in **FADS**, one wants to first initialize the python class FADS. The inputs needed to initialize the FADS class in **FADS** are as follows.
+For all methods in **FADS**, one wants to first initialize the python class FADS. The initialization step automatically copies of the original data and preprocesses the copied data by standardizing and adding noise to it (see [[1]](#1) for details). The inputs needed to initialize the FADS class in **FADS** are as follows.
 
 ***Inputs:***
 - data: a numpy array with N rows and q columns, where N is the data set size and q is the dimension of the data space.
