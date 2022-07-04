@@ -19,7 +19,7 @@ class FADS:
     Daniel Apley <apley@northwestern.edu>
     Sanjay Mehrotra <mehrotra@northwestern.edu>
     
-    Last Updated on: Jun 02, 2022    
+    Last Updated on: July 04, 2022    
     
     '''
     
