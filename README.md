@@ -41,6 +41,7 @@ The DS function in **FADS** selects a diverse subsample from a data set without 
 - max_iter: an integer denoting the maximum number of Expectation-Maximization (EM) iterations to perform to build the GMM. Default value is 10.
 - update_iter: an integer denoting the number of additional EM iterations to perform when updating the density regularly along the subsampling process. Note that in this case the previously resulting GMM parameters will be used as initial values. Default value is 1.
 - n_update: an positive integer; the density of the remaining data set is updated every n_update points getting selected into the subsample. A non-positive value indicates the default choice: the larger value among 100 and &LeftFloor;<sup>n</sup>&frasl;<sub>10</sub>  &RightFloor;
+- cov_type - The covariance type to use for GMM density estimation. Can only be one of 'full', 'tied', 'diag', or 'spherical'.The default is 'diag'.
 
 ***Outputs:***
 - sample_idx: a numpy array of size n with data type np.int64. The i-th element of sample_idx denotes the index of the i-th selected subsample point.
@@ -145,6 +146,7 @@ Hyper-parameters for methods in the **FADS** package are related to the process 
 - nfold: integer; how many folds to use for the Cross-Validation(CV) procedure. Default value is 3.
 - init_list: a python list of possible choices of 'init_params'; see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement) for the definition of 'init_params'. Default value is ['kmeans', 'random'].
 - fraction: a float ranging from 0 to 1; a random subset of size &LeftFloor;fraction&times;N&RightFloor; will be selected from the data for the CV procedure. Here N denotes the data set size and &LeftFloor;fraction&times;N&RightFloor; denotes the largest integer not larger than fraction&times;N. Default value is 1.0.
+- cov_type_list: python list of possible choices of 'cov_type'; see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement) for the definition of 'cov_type'. Default value is ['full', 'tied', 'diag', 'spherical'].
 
 
 ***Outputs:*** 
@@ -162,9 +164,9 @@ The tune_params_cv function follows the following algorithm to tune the hyper-pa
 
 For the choice of ’update_iter’, larger values of ’update_iter’ usually lead to better accuracy in density updating, at the price of longer runtime. Since in the DS algorithm, previously obtained GMM parameters are used as initial guesses for the updating process, we suggest using a smaller value for update_iter than max_iter for better computational efficiency. The default setting is update_iter = 1. Note that ’update_iter’ will not be tuned by the tune_params_cv function and the user is expected to use the default setting or to specify it explicitly.
 
-By [[1]](#1), setting ncomponent = 32, max_iter = 10, update_iter = 1, and init_params = ’kmeans’ works well for all tested examples with various data distributions in 2D and 10D in their experiments, including product forms of standard normal, exponential, gamma, geometric distributions, and a mixture of multivariate Gaussian distributions. So we use this setting as the default hyper-parameter setting for all functions in the **FADS** package. 
+By [[1]](#1), setting ncomponent = 32, max_iter = 10, update_iter = 1, init_params = ’kmeans’ and cov_type = 'diag' works well for all tested examples with various data distributions in 2D and 10D in their experiments, including product forms of standard normal, exponential, gamma, geometric distributions, and a mixture of multivariate Gaussian distributions. So we use this setting as the default hyper-parameter setting for all functions in the **FADS** package. 
 
-The code for hyper-paramter tuning using tune_params_cv is shown below. Here the possible choices of ’ncomponent’, ’max_iter’ and ’init_params’ are respectively {2, 15, 30}, {10, 100} and {’kmeans’}. We use a random subset of the data with size &LeftFloor;N/2&RightFloor; to perform this task.
+The code for hyper-paramter tuning using tune_params_cv is shown below. Here the possible choices of ’ncomponent’, ’max_iter’, ’init_params’, 'cov_type' are respectively {2, 15, 30}, {10, 100}, {’kmeans’}, and {'full','diag'}. We use a random subset of the data with size &LeftFloor;N/2&RightFloor; to perform this task.
 
 ```python
 import FADS
@@ -175,12 +177,14 @@ nfold = 3
 ncomponents = [2,15,30]
 max_iters = [10,100]
 inits = ['kmeans']
+mycov = ['full', 'diag']
 fraction = 0.5
 
 #tune hyper-parameters
 fastds.tune_params_CV(ncomponent_list = ncomponents,\
        max_iter_list = max_iters, init_list = inits,\
-       nfold = nfold,fraction = fraction)
+       nfold = nfold,fraction = fraction,\
+       cov_type_list = mycov)
 
 #e.g. use DS to select a diverse subsample with size
 #     2000 using the tuned paramters
