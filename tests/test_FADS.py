@@ -119,20 +119,21 @@ def test_tune_params(data4tests):
     #pass our generated synthetic data
     data = data4tests
     
+
     fastds = FADS.FADS(data, tune_params = True)
     #user-specified parameter choices
     nfold = 3
     ncomponents = [2,15,30]
     max_iters = [10,100]
     inits = ['kmeans']
+    mycov = ['full', 'diag']
     fraction = 0.5
 
     #tune hyper-parameters
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        fastds.tune_params_CV(ncomponent_list = ncomponents,\
+    fastds.tune_params_CV(ncomponent_list = ncomponents,\
            max_iter_list = max_iters, init_list = inits,\
-           nfold = nfold,fraction = fraction)
+           nfold = nfold,fraction = fraction,\
+           cov_type_list = mycov)
 
     #e.g. use DS to select a diverse subsample with size
     #     2000 using the tuned paramters
