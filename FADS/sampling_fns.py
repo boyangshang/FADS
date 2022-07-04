@@ -1,9 +1,9 @@
 import math
 import numpy as np 
 import random
-from sklearn.neighbors import NearestNeighbors
 from sklearn import mixture
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import KFold
 import warnings
 
 
@@ -47,15 +47,19 @@ class FADS:
         perturbed_data = (data - Min_arr)/(Max_arr - Min_arr)
 
         ##perturb the standardized data set
-        #figure out the variance of the normal random variable used for perturabtion. Perturbation variance is shared accross dimensions.
-        sigma_perturbation = 0.0
+        #figure out the variance of the normal random variable used for perturabtion. Perturbation variance is customized for each dimension.
+        q = data.shape[1]
+        sigma_perturbation = np.zeros(shape = (1,q))
+        
+        
+        nrand = np.min([2000, int(N/4)])
+        while np.min(sigma_perturbation == 0.0):           
+            for dim in range(q):
+                unique = np.unique(perturbed_data[np.random.choice(range(N),nrand,replace = False),dim], return_counts=False)
+                sorted_unique = np.sort(unique)
+                pair_dist = np.diff(sorted_unique)
 
-        while sigma_perturbation == 0.0:
-            nrand = np.min([2000, int(N/4)])
-            (unique, counts) = np.unique(perturbed_data[np.random.choice(range(N),nrand,replace = False),:], return_counts=True,axis = 0)
-            nbrs = NearestNeighbors(n_neighbors=2, algorithm='auto').fit(unique)
-            distances, indices = nbrs.kneighbors(unique)
-            sigma_perturbation = np.min(distances[:,1])/8.0
+                sigma_perturbation[0,dim] = np.min(pair_dist)/8.0
 
         perturbed_data += np.random.normal(0,sigma_perturbation, data.shape)
         
@@ -67,7 +71,7 @@ class FADS:
             
         
         
-    def tune_params_CV(self, ncomponent_list = [2,10,50], max_iter_list = [10, 50,100], nfold = 3,init_list = ['kmeans', 'random'], fraction = 1.0):
+    def tune_params_CV(self, ncomponent_list = [2,10,50], max_iter_list = [10, 50,100], nfold = 3,init_list = ['kmeans', 'random'], cov_type_list = ['full', 'tied', 'diag', 'spherical'], fraction = 1.0):
         '''
         Tune parameters for GMM density estimation using CV
         
@@ -76,6 +80,7 @@ class FADS:
         max_iter_list - pyton list of integers, the possible maximum number of iterations for EM updates during the GMM density estimation
         nfold - int, the number of folds to use for a nfold-CV
         init_list - python list of possible ways to initialize GMM component probabilities. Each element in init_list must be either 'kmeans' or 'random'.
+        cov_type_list - python list of strings, possible covariance types for the GMM. Must be a subset of ['full', 'tied', 'diag', 'spherical'].
         fraction - the portaion of the data to use for CV to tune parameters. For example, in the case when fraction = 0.5, a random subset of data with size self.N/2 will be used instead of self.data. 
         
         Output:
@@ -103,11 +108,15 @@ class FADS:
             if not set(init_list).issubset(['kmeans','random']):
                 raise ValueError("Each element in init_list must be either 'kmeans' or 'random'.")     
             param_choices['init_params'] = init_list
-            
+            #covariance types
+            if not set(cov_type_list).issubset(['full', 'tied', 'diag', 'spherical']):
+                raise ValueError("Each element in cov_type_list can only be 'full', 'tied', 'diag', or 'spherical'!")     
+            param_choices['cov_types'] = cov_type_list
             
             #CV
             gmm =  mixture.GaussianMixture()
-            clf = GridSearchCV(gmm, param_choices,cv=nfold,refit = False)
+            kf = KFold(n_splits=nfold, shuffle = True)
+            clf = GridSearchCV(gmm, param_choices,cv=kf,refit = False)
             #we will supress warnings due to GMM failing to converge
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
@@ -130,7 +139,7 @@ class FADS:
         
         
 
-    def DS(self, n, ncomponent = 32, max_iter = 10, update_iter = 1, init_params='kmeans'):
+    def DS(self, n, ncomponent = 32, max_iter = 10, update_iter = 1, init_params='kmeans', n_update = -1, cov_type = 'diag'):
         """
         Input: 
         n - number of sample points to be selected
@@ -138,6 +147,8 @@ class FADS:
         max_iter - maximum number of iterations for GMM density estimation
         update_iter - number of iterations to do for GMM density updating
         init_params - Ways to initialize GMM parameters, must be 'kmeans' or 'random'
+        n_update - The subsampling procedure is performed every n_update subsample points getting selected. n_update must be no larger than n. When n_udpate = -1, the function sets n_update as np.max([100,math.floor(n/10)]).
+        cov_type - The covariance type to use for GMM density estimation. Can only be one of 'full', 'tied', 'diag', or 'spherical'.
 
 
         Output:
@@ -158,11 +169,15 @@ class FADS:
             ncomponent = self.best_params['n_components']
             max_iter = self.best_params['max_iter']
             init_params = self.best_params['init_params']
+            cov_type = self.best_params['cov_types']
         
         
         
-        
-        n_update = np.max([100,math.floor(n/10)])
+        if n_update <= 0:
+            n_update = np.max([100,math.floor(n/10)])
+        elif n_update > n:
+            raise ValueError("n_update cannot be larger than n.")
+            
         freq_update = math.floor(n/n_update)
 
         if freq_update > 0:
@@ -172,7 +187,7 @@ class FADS:
             for i in range(1,int(freq_update+1),1):
                 if i==1:
 
-                    est_density_array, gmm = self.GMMdiag_density(perturbed_data, ncomponent, max_iter,init_params)
+                    est_density_array, gmm = self.GMMdiag_density(perturbed_data, ncomponent, max_iter,init_params,cov_type)
                     density = 1/est_density_array
                     sums = np.sum(density)
                     density = density/sums
@@ -206,7 +221,7 @@ class FADS:
                 sample_idx.extend(selected_idx)
 
         else:
-            est_density_array, gmm = self.GMMdiag_density(perturbed_data, ncomponent, max_iter,init_params)
+            est_density_array, gmm = self.GMMdiag_density(perturbed_data, ncomponent, max_iter,init_params,cov_type)
             density = 1/est_density_array
             sums = np.sum(density)
             density = density/sums
@@ -215,7 +230,7 @@ class FADS:
 
         return sample_idx 
 
-    def GMMdiag_density(self, data, ncomponent, max_iter,init_params):
+    def GMMdiag_density(self, data, ncomponent, max_iter,init_params,cov_type):
         '''
         Estimate density of data using GMM 
         
@@ -224,6 +239,7 @@ class FADS:
         ncomponent - the number of component to use for GMM
         max_iter - maximum number of iterations for GMM density estimation
         init_params - Ways to initialize GMM parameters, must be 'kmeans' or 'random'
+        cov_type - Type of covariance matrix to use for GMM density estimation. Can only be one of 'full', 'tied', 'diag', or 'spherical'.
         
         Output:
         gmm_density - numpy array of np.float64 with size N. The estimated density of self.data
@@ -235,7 +251,7 @@ class FADS:
        
         
 
-        gmm = mixture.GaussianMixture(n_components=ncomponent,covariance_type='diag',max_iter=max_iter,init_params = init_params,warm_start = False)
+        gmm = mixture.GaussianMixture(n_components=ncomponent,covariance_type=cov_type,max_iter=max_iter,init_params = init_params,warm_start = False)
         gmm.fit(data)
         gmm_density = np.exp(gmm.score_samples(data))
 
@@ -268,7 +284,7 @@ class FADS:
 
 
 
-    def DS_g(self, n, target_pdf_list = None, ncomponent = 32, max_iter = 10, update_iter = 1, reg_param = 0.0, init_params='kmeans'):
+    def DS_g(self, n, target_pdf_list = None, ncomponent = 32, max_iter = 10, update_iter = 1, n_update = -1, cov_type = 'diag', reg_param = 0.0, init_params='kmeans'):
 
 
         """
@@ -287,10 +303,16 @@ class FADS:
         max_iter - maxmimum number of iterations for initial GMM density estimation
 
         update_iter - additional iteratinos run at each density updating step
+        
+        n_update - The subsampling procedure is performed every n_update subsample points getting selected. n_update must be no larger than n. When n_udpate = -1, the function sets n_update as np.max([100,math.floor(n/10)]).
+        
+        cov_type - The covariance type to use for GMM density estimation. Can only be one of 'full', 'tied', 'diag', or 'spherical'.
 
         reg_param - nonnegative float between 0 and 100. the target density would be g/f + alpha/f, where g is specified via target_pdf_value. alpha is the lower reg_param*0.01 quantile of g evaluated on the data. The larger reg_param is, the more space-filling the subsample would be.
 
         init_params - Ways to initialize GMM parameters, must be 'kmeans' or 'random'
+        
+       
 
 
 
@@ -311,6 +333,7 @@ class FADS:
             ncomponent = self.best_params['n_components']
             max_iter = self.best_params['max_iter']
             init_params = self.best_params['init_params']
+            cov_type = self.best_params['cov_types']
             
             
         #figure out how to get the target subsampling ratios 
@@ -320,7 +343,11 @@ class FADS:
             target_pdf_list = np.ones(N, dtype = np.float64)
 
    
-        n_update = np.max([100,math.floor(n/10)])
+        if n_update <= 0:
+            n_update = np.max([100,math.floor(n/10)])
+        elif n_update > n:
+            raise ValueError("n_update cannot be larger than n.")
+            
         freq_update = math.floor(n/n_update)
 
 
@@ -335,7 +362,7 @@ class FADS:
             for i in range(1,int(freq_update+1),1):
                 if i==1:
 
-                    est_density_array, gmm = self.GMMdiag_density(perturbed_data, ncomponent, max_iter,init_params)
+                    est_density_array, gmm = self.GMMdiag_density(perturbed_data, ncomponent, max_iter,init_params,cov_type)
                     #target pdf vlues                    
                     g_list = target_pdf_list   
                     #we do not allow too small density values which might be due to numerical errors
@@ -388,7 +415,7 @@ class FADS:
                 sample_idx.extend(selected_idx)
 
         else:
-            est_density_array, gmm = self.GMMdiag_density(perturbed_data, ncomponent, max_iter,init_params)
+            est_density_array, gmm = self.GMMdiag_density(perturbed_data, ncomponent, max_iter,init_params,cov_type)
             #target pdf vlues            
             g_list = target_pdf_list            
             #we do not allow too small density values which might be due to numerical errors
@@ -404,13 +431,14 @@ class FADS:
 
         return sample_idx 
 
-    def DS_WR(self, n, ncomponent = 32, max_iter = 10, init_params='kmeans'):
+    def DS_WR(self, n, ncomponent = 32, max_iter = 10, init_params='kmeans',cov_type = 'diag'):
         """
         Input: 
         n - number of sample points to be selected
         ncomponent - the number of component to use for GMM
         max_iter - maximum number of iterations for GMM density estimation
         init_params - Ways to initialize GMM parameters, must be 'kmeans' or 'random'
+        cov_type - The covariance type to use for GMM density estimation. Can only be one of 'full', 'tied', 'diag', or 'spherical'.
 
 
         Output:
@@ -425,12 +453,9 @@ class FADS:
             ncomponent = self.best_params['n_components']
             max_iter = self.best_params['max_iter']
             init_params = self.best_params['init_params']
-
-
-
-
+            cov_type = self.best_params['cov_types']
         
-        est_density_array, gmm = self.GMMdiag_density(perturbed_data, ncomponent, max_iter,init_params)
+        est_density_array, gmm = self.GMMdiag_density(perturbed_data, ncomponent, max_iter,init_params,cov_type)
         #print(est_density_array[0:7])
         density = 1/est_density_array
         sums = np.sum(density)
