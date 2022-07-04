@@ -40,6 +40,7 @@ The DS function in **FADS** selects a diverse subsample from a data set without 
 - init_params: a string denoting the method to initialize the component probabilities for GMM. It must be either ’kmeans’ or ’random’. When specified as ’kmeans’, the initial component probabilities in GMM will be chosen using the kmeans algorithm ([[3]](#3)); when specified as ’random’, the initial component probabilities in GMM will be chosen randomly. Default value is 'kmeans'.
 - max_iter: an integer denoting the maximum number of Expectation-Maximization (EM) iterations to perform to build the GMM. Default value is 10.
 - update_iter: an integer denoting the number of additional EM iterations to perform when updating the density regularly along the subsampling process. Note that in this case the previously resulting GMM parameters will be used as initial values. Default value is 1.
+- n_update: an positive integer; the density of the remaining data set is updated every n_update points getting selected into the subsample. A non-positive value indicates the default choice: the larger value among 100 and &LeftFloor;<sup>n</sup>&frasl;<sub>10</sub>  &RightFloor;
 
 ***Outputs:***
 - sample_idx: a numpy array of size n with data type np.int64. The i-th element of sample_idx denotes the index of the i-th selected subsample point.
