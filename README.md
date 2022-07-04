@@ -166,7 +166,7 @@ For the choice of ’update_iter’, larger values of ’update_iter’ usually 
 
 By [[1]](#1), setting ncomponent = 32, max_iter = 10, update_iter = 1, init_params = ’kmeans’ and cov_type = 'diag' works well for all tested examples with various data distributions in 2D and 10D in their experiments, including product forms of standard normal, exponential, gamma, geometric distributions, and a mixture of multivariate Gaussian distributions. So we use this setting as the default hyper-parameter setting for all functions in the **FADS** package. 
 
-The code for hyper-paramter tuning using tune_params_cv is shown below. Here the possible choices of ’ncomponent’, ’max_iter’, ’init_params’, 'cov_type' are respectively {2, 15, 30}, {10, 100}, {’kmeans’}, and {'full','diag'}. We use a random subset of the data with size &LeftFloor;N/2&RightFloor; to perform this task.
+The code for hyper-paramter tuning using tune_params_cv is shown below. Here the possible choices of ’ncomponent’, ’max_iter’, ’init_params’, and 'cov_type' are respectively {2, 15, 30}, {10, 100}, {’kmeans’}, and {'full','diag'}. We use a random subset of the data with size &LeftFloor;N/2&RightFloor; to perform this task.
 
 ```python
 import FADS
