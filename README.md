@@ -192,11 +192,12 @@ n = 2000
 ds_idx = fastds.DS(n)
 ```
 
+
 # References
 <a id="1">[1]</a> 
-Shang, B. and Apley, D. and Mehrotra, S (2022). 
-Diversity Subsampling: Custom Subsamples from a Data Set. 
-submitted to Informs Journal of Data Science, 00(0), pp-pp.
+Shang, B. and Apley, D.W. and Mehrotra, S. (2022). 
+Diversity Subsampling: Custom Subsamples from Large Data Sets. 
+arXiv preprint arXiv:2206.10812.
 
 <a id="2">[2]</a> 
 Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V.
