@@ -73,7 +73,7 @@ The selected DS subsample is fully-sequential. We can plot the subsamples at var
 
 
 ## Diversity Subsampling With Replacement
-The DS_WR function in **FADS** selects a diverse subsample from a data set with replacement. The inputs and outputs of DS_WR are the same with the DS function (see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement)) except that update_iter is not one of its inputs.
+The DS_WR function in **FADS** selects a diverse subsample from a data set with replacement. The inputs and outputs of DS_WR are the same with the DS function (see [Diversity Subsampling Without Replacement](#diversity-subsampling-without-replacement)) except that update_iter and n_update are not among the inputs.
 
 
 
